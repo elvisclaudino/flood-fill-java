@@ -9,4 +9,10 @@ public class Node<T> {
     public Node(T value) {
         data = value;
     }
+
+    @Override
+    public String toString() {
+        return "Node [ previous = " + (previous != null ? previous.data : null) + ", data = " + data  + ", next = " + (next != null ? next.data : null) + " ]";
+    }
+    
 }
