@@ -1,9 +1,11 @@
 package classes;
 
+import java.util.Iterator;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
-public class LinkedList<T> {
+public class LinkedList<T> implements Iterable<T> {
 
     private int length = 0;
     private Node<T> top = null;
@@ -48,7 +50,7 @@ public class LinkedList<T> {
         return null;
     }
  
-    private Node<T> getNode(int index) throws Exception {
+    protected Node<T> getNode(int index) throws Exception {
         boolean direction = index > length / 2;
         return direction ? getFromTop(index) : getFromBase(index);
     }
@@ -74,12 +76,10 @@ public class LinkedList<T> {
 
         if (this.isEmpty()) {
             this.base = node;
-            this.top = node;
         } else {
             var oldTop = this.top;
             oldTop.next = node;
             node.previous = oldTop;
-            this.top = node;
         }
 
         this.top = node;
@@ -103,28 +103,45 @@ public class LinkedList<T> {
         length++;
     }
 
+    public void set(T element, int index) throws Exception {
+        getNode(index).data = element;
+    }
+
     public T remove() throws Exception {
+        return remove(length - 1);
+    }
+    
+    public T remove(int index) throws Exception {
         T element = null;
 
         if (!isEmpty()) {
+            Node<T> node = getNode(index);
             length--;
-            element = top.data;
+            element = node.data;
             
-            this.top = top.equals(base) ? base : top.previous;
-            this.top.next = null;
+            if (node.previous != null) {
+                node.previous.next = node.next;
+            } else {
+                base = node.next;
+            }
+
+            if (node.next != null) {
+                node.next.previous = node.previous;
+            } else {
+                top = node;
+            }
 
             if (length == 0) {
                 this.clear();
             }
-            
         } else {
             throw new Exception("Trying to remove element from empty List.");
         }
         
         return element;
     }
-    
-    public void forEach(Consumer<T> fn) {
+
+    public void forEach(Consumer<? super T> fn) {
         var currentElement = this.base;
 
         while (currentElement != null) {
@@ -134,7 +151,7 @@ public class LinkedList<T> {
         }
     }
 
-    public void forEach(BiConsumer<T, Integer> fn) {
+    public void forEach(BiConsumer<? super T, Integer> fn) {
         var currentElement = this.base;
         int index = 0;
 
@@ -145,4 +162,57 @@ public class LinkedList<T> {
         }
     }
 
+    public T find(Function<? super T, Boolean> predicate) {
+        var currentElement = this.base;
+
+        while (currentElement != null) {
+            if (predicate.apply(currentElement.data)) {
+                return currentElement.data;
+            }
+            currentElement = currentElement.next != null ? currentElement.next : null;
+        }
+        return null;
+    }
+
+    public LinkedList<T> filter(Function<? super T, Boolean> predicate) {
+        LinkedList<T> filterList = new LinkedList<>();
+
+        var currentElement = this.base;
+
+        while (currentElement != null) {
+            if (predicate.apply(currentElement.data)) {
+                filterList.add(currentElement.data);
+            }
+            currentElement = currentElement.next != null ? currentElement.next : null;
+        }
+        
+        return filterList;
+    }
+
+    public Iterator<T> iterator() {
+        return new ListIterator<T>(this);
+    }
+
+}
+
+class ListIterator<T> implements Iterator<T> {
+    private Node<T> current;
+    
+    ListIterator(LinkedList<T> obj) {
+        try {
+            current = obj.size() > 0 ? obj.getNode(0) : null;
+        } catch (Exception e) {
+        }
+    }      
+
+    public boolean hasNext() {
+        return current.next != null;
+    }
+      
+    public T next() {
+        T data = current.data;
+        current = current.next;
+        return data;
+    }
+      
 }

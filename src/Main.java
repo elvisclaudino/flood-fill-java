@@ -12,10 +12,10 @@ public class Main {
         list.add(4);
         list.add(5);
 
-        list.add(9, 3);
-        
 
-        list.forEach(x -> fn(x));
+        list.remove(list.size() / 2);
+        list.set(99, 0);
+        list.add(66, 1);
 
     }
 }
