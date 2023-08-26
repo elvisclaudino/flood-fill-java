@@ -1,28 +1,24 @@
 package classes;
 
+import interfaces.ILinkedList;
+
 import java.util.Iterator;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class LinkedList<T> implements Iterable<T> {
+public abstract class LinkedList<T> implements Iterable<T>, ILinkedList<T> {
 
-    private int length = 0;
-    private Node<T> top = null;
-    private Node<T> base = null;
-    private Exception indexOutBoundsException = new Exception("Index out of bounds");
+    protected int length = 0;
+    protected Node<T> top = null;
+    protected Node<T> base = null;
+    protected Exception indexOutBoundsException = new Exception("Index out of bounds");
     
-    private boolean isEmpty() {
+    protected boolean isEmpty() {
         return length == 0;
     }
 
-    private void clear() {
-        this.base = null;
-        this.top = null;
-        this.length = 0;
-    }
-
-    private Node<T> getFromTop(int index) {
+    protected Node<T> getFromTop(int index) {
         int _i = length - 1;
         Node<T> curr = top;
 
@@ -36,7 +32,7 @@ public class LinkedList<T> implements Iterable<T> {
         return null;
     }
 
-    private Node<T> getFromBase(int index) {
+    protected Node<T> getFromBase(int index) {
         int _i = 0;
         Node<T> curr = base;
 
@@ -55,11 +51,46 @@ public class LinkedList<T> implements Iterable<T> {
         return direction ? getFromTop(index) : getFromBase(index);
     }
 
-    private boolean validIndex(int index) throws Exception {
+    protected void validIndex(int index) throws Exception {
         if (index > 0 && index > length - 1 || index < 0) {
             throw indexOutBoundsException;
         }
-        return true;
+    }
+
+    protected T remove(int index) throws Exception {
+        T element = null;
+
+        if (!isEmpty()) {
+            Node<T> node = getNode(index);
+            element = node.data;
+            length--;
+
+            if (node.previous != null) {
+                node.previous.next = node.next;
+            } else {
+                base = node.next;
+            }
+
+            if (node.next != null) {
+                node.next.previous = node.previous;
+            } else {
+                top = node.previous;
+            }
+
+            if (length == 0) {
+                this.clear();
+            }
+        } else {
+            throw new Exception("Trying to remove element from empty List.");
+        }
+
+        return element;
+    }
+
+    public void clear() {
+        this.base = null;
+        this.top = null;
+        this.length = 0;
     }
 
     public int size() {
@@ -85,73 +116,22 @@ public class LinkedList<T> implements Iterable<T> {
         this.top = node;
         this.length++;
     }
-    
-    public void add(T element, int index) throws Exception {
-        validIndex(index);
-
-        Node<T> toInsertNode = new Node<T>(element);
-
-        Node<T> toMoveNode = getNode(index);
-        Node<T> previousNode = toMoveNode.previous;
-
-        previousNode.next = toInsertNode;
-        toInsertNode.previous = previousNode;
-
-        toInsertNode.next = toMoveNode;
-        toMoveNode.previous = toInsertNode;
-        
-        length++;
-    }
-
-    public void set(T element, int index) throws Exception {
-        getNode(index).data = element;
-    }
 
     public T remove() throws Exception {
         return remove(length - 1);
     }
-    
-    public T remove(int index) throws Exception {
-        T element = null;
 
-        if (!isEmpty()) {
-            Node<T> node = getNode(index);
-            length--;
-            element = node.data;
-            
-            if (node.previous != null) {
-                node.previous.next = node.next;
-            } else {
-                base = node.next;
-            }
-
-            if (node.next != null) {
-                node.next.previous = node.previous;
-            } else {
-                top = node;
-            }
-
-            if (length == 0) {
-                this.clear();
-            }
-        } else {
-            throw new Exception("Trying to remove element from empty List.");
-        }
-        
-        return element;
-    }
 
     public void forEach(Consumer<? super T> fn) {
         var currentElement = this.base;
 
         while (currentElement != null) {
-            System.out.println(currentElement.toString());
             fn.accept(currentElement.data);
             currentElement = currentElement.next != null ? currentElement.next : null;
         }
     }
 
-    public void forEach(BiConsumer<? super T, Integer> fn) {
+    public void forEach(BiConsumer<T, Integer> fn) {
         var currentElement = this.base;
         int index = 0;
 
@@ -175,7 +155,7 @@ public class LinkedList<T> implements Iterable<T> {
     }
 
     public LinkedList<T> filter(Function<? super T, Boolean> predicate) {
-        LinkedList<T> filterList = new LinkedList<>();
+        LinkedList<T> filterList = new List<>();
 
         var currentElement = this.base;
 
@@ -200,13 +180,13 @@ class ListIterator<T> implements Iterator<T> {
     
     ListIterator(LinkedList<T> obj) {
         try {
-            current = obj.size() > 0 ? obj.getNode(0) : null;
-        } catch (Exception e) {
+            current = !obj.isEmpty() ? obj.getNode(0) : null;
+        } catch (Exception ignored) {
         }
     }      
 
     public boolean hasNext() {
-        return current.next != null;
+        return current != null && current.next != null;
     }
       
     public T next() {
