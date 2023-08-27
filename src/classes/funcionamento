@@ -1,0 +1,34 @@
+Definição da Matriz de Imagem:
+No início do código, você tem a definição de uma matriz bidimensional chamada image. Esta matriz representa a imagem na qual você deseja aplicar o algoritmo de preenchimento por inundação. Cada elemento da matriz contém um valor inteiro que representa uma cor ou estado específico.
+
+Importação das Classes:
+O código importa as classes que você definiu anteriormente (FloodFiller, Coordinate, LinkedList, etc.).
+
+Método main:
+O método main é o ponto de entrada do programa.
+
+Criação da Instância do FloodFiller:
+Você cria uma instância da classe FloodFiller usando a matriz image que você definiu. Isso permite que você use a funcionalidade do algoritmo de preenchimento por inundação na imagem.
+
+Invocação do Método paint:
+Você invoca o método paint no objeto floodFiller. O método paint é responsável por iniciar a operação de preenchimento por inundação na matriz. Você passa três argumentos para o método: as coordenadas (5, 0) e o valor 2 que você deseja preencher na imagem.
+
+Impressão da Imagem Original:
+Antes de iniciar o preenchimento, a imagem original (matriz) é impressa no console usando o método printImage() da classe FloodFiller.
+
+Início do Preenchimento:
+O método paint dentro da classe FloodFiller é chamado. Ele inicia a operação de preenchimento por inundação na posição (5, 0) com o valor 2.
+
+Coordenada Inicial:
+A coordenada (5, 0) é usada como ponto de partida para o preenchimento. O algoritmo começa verificando a cor (valor) da coordenada inicial.
+
+Chamada do Método fill:
+O algoritmo chama o método fill para começar a preencher recursivamente a partir da coordenada inicial. Ele procura por elementos vizinhos com a mesma cor e os substitui pelo novo valor de preenchimento.
+
+Operação de Preenchimento:
+O algoritmo verifica os elementos vizinhos na matriz, substituindo os elementos com a mesma cor pelo novo valor de preenchimento (no caso, 2). Ele continua fazendo isso até que não haja mais vizinhos com a mesma cor a serem preenchidos.
+
+Impressão da Imagem Preenchida:
+Depois que a operação de preenchimento é concluída, a imagem preenchida é impressa no console usando novamente o método printImage() da classe FloodFiller.
+
+Em resumo, o programa cria uma matriz de imagem, inicia uma instância do FloodFiller, aplica o algoritmo de preenchimento por inundação na matriz e, em seguida, imprime a imagem original e a imagem preenchida no console. O algoritmo de preenchimento por inundação altera os valores da matriz para preencher áreas contíguas com o novo valor especificado.
