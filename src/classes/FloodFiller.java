@@ -17,12 +17,8 @@ public class FloodFiller {
 
     private Queue<Coordinate> queue = new Queue<>();
     private Stack<Coordinate> stack = new Stack<>();
-<<<<<<< HEAD
 
-    public FloodFiller(T[][] matrixOrigin) {
-=======
     public FloodFiller(int[][] matrixOrigin) {
->>>>>>> 18a0e56b42b46a6dc9fdc8ba73a8d5dd685928e5
         this.matrixOrigin = matrixOrigin;
     }
 
@@ -44,12 +40,8 @@ public class FloodFiller {
     private int[][] matrix() {
         return  currentMatrix == null ? matrixOrigin : currentMatrix;
     }
-<<<<<<< HEAD
-    protected void matrix(int x, int y, T value) {
-=======
 
     protected void matrix(int x, int y, int value) {
->>>>>>> 18a0e56b42b46a6dc9fdc8ba73a8d5dd685928e5
         matrix()[x][y] = value;
     }
     public void printImage() {
@@ -60,13 +52,9 @@ public class FloodFiller {
         }
         System.out.println("}");
     }
-<<<<<<< HEAD
-    public void paint(int x, int y, T value) throws Exception {
-=======
 
     public void paint(int x, int y, int value) throws Exception {
         System.arraycopy(matrixOrigin, 0, currentMatrix, matrixOrigin.length - 1, matrixOrigin.length);
->>>>>>> 18a0e56b42b46a6dc9fdc8ba73a8d5dd685928e5
         Coordinate coord = new Coordinate(x, y);
         printImage();
         int toFind = matrix()[coord.getX()][coord.getY()];
@@ -89,12 +77,8 @@ public class FloodFiller {
 
         } else throw new Exception("Coordenada inválida!");
     }
-<<<<<<< HEAD
-    private boolean checkX(Coordinate coordinate, T find) {
-=======
 
     private boolean checkX(Coordinate coordinate, int find) {
->>>>>>> 18a0e56b42b46a6dc9fdc8ba73a8d5dd685928e5
         boolean found = true;
 
         coordinate.setX(coordinate.getX() + 1);
