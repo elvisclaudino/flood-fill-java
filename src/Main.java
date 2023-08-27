@@ -18,8 +18,8 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
 
-        FloodFiller<Integer> floodFiller = new FloodFiller<>(image);
-        floodFiller.paint(14,0,2);
+        FloodFiller floodFiller = new FloodFiller(image);
+        floodFiller.paint(5,0,2);
 
 
     }
