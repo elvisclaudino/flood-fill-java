@@ -2,7 +2,7 @@ import classes.*;
 
 public class Main {
 
-    static Integer[][] image = {
+    static int[][] image = {
             {0,0,0,0,0,0,0,0,0,1},
             {0,0,0,0,0,0,0,0,1,0},
             {0,0,0,0,0,0,0,1,0,0},
