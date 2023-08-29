@@ -46,7 +46,7 @@ public abstract class LinkedList<T> implements Iterable<T>, ILinkedList<T> {
         return null;
     }
  
-    protected Node<T> getNode(int index) throws Exception {
+    protected synchronized Node<T> getNode(int index) throws Exception {
         boolean direction = index > length / 2;
         return direction ? getFromTop(index) : getFromBase(index);
     }
