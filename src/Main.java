@@ -13,7 +13,7 @@ public class Main {
             {0,0,0,0,1,0,0,0,0,0},
             {0,0,0,1,0,0,0,0,0,0},
             {0,0,1,0,0,0,0,0,0,0},
-            {0,1,0,0,0,0,0,0,0,0},
+            {0,1,0,0,0,0,8,0,0,0},
             {1,0,0,0,0,0,0,0,0,0},
     };
 
@@ -22,12 +22,11 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
 
-//         FloodFiller floodFiller = new FloodFiller(image);
-//         floodFiller.paint(5,0,2);
+        // FloodFiller floodFiller = new FloodFiller(image);
+        // floodFiller.paint(5,0,2);
 
         FloodFiller floodFiller = new FloodFiller("src/resources/input-image.png", "src/resources/output-image.png");
-        floodFiller.paint(0,0, color.getRGB());
-
+        floodFiller.paint(45,0, color.getRGB(), true);
 
 
     }

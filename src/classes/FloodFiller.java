@@ -21,6 +21,7 @@ public class FloodFiller {
     private String outputPath;
     private BufferedImage inputImage;
     private BufferedImage outputImage;
+    private boolean onlyResultImage;
 
     public FloodFiller(int[][] matrixOrigin) {
         this.matrixOrigin = matrixOrigin;
@@ -60,8 +61,10 @@ public class FloodFiller {
         System.out.println("}");
     }
 
-    public void paint(int x, int y, int value) throws Exception {
+    public void paint(int x, int y, int value) throws Exception { paint(x, y, value, false);}
+    public void paint(int x, int y, int value, boolean onlyResultImage) throws Exception {
         Coordinate coord = new Coordinate(x, y);
+        this.onlyResultImage = onlyResultImage;
         if (matrix() != null) {
             if (coord.getX() < matrix().length && coord.getY() < matrix()[coord.getX()].length) {
                 printImage();
@@ -80,7 +83,7 @@ public class FloodFiller {
                 
             } else throw new Exception("Coordenada inválida!");
 
-            if (inputImage != null) {
+            if (inputImage != null && onlyResultImage) {
                 createFile(outputImage);                
             }
         }
@@ -109,7 +112,7 @@ public class FloodFiller {
             matrix()[coordinate.getX()][coordinate.getY()] = replace;
         } else if (outputImage != null) {
             outputImage.setRGB(coordinate.getX(), coordinate.getY(), replace);
-            if (++counter % 10 == 0) {
+            if (++counter % 10 == 0 && !this.onlyResultImage) {
                 createFile(outputImage);
             }
         }
@@ -142,6 +145,7 @@ public class FloodFiller {
                 stack.add(coordinate);
             } else found = false;
         }
+        
         return found;
     }
     private boolean checkY(Coordinate coordinate, int find) {
@@ -155,7 +159,7 @@ public class FloodFiller {
                 stack.add(coordinate);
             } else found = false;
         }
-
+        
         coordinate = new Coordinate(coordinate.getX(), coordinate.getY() + 2);
         if (checkBottom(coordinate)) {
             if (matrix() != null && matrix()[coordinate.getX()][coordinate.getY()] == find) {
@@ -164,6 +168,8 @@ public class FloodFiller {
                 stack.add(coordinate);
             } else found = false;
         }
+        
+        
         return found;
     }
 

@@ -26,10 +26,12 @@ public class Queue<T> extends LinkedList<T> {
         if (top == base) {
             element = super.get(top);
             this.clear();
+            return element;
         }
-
+        
         if (!isEmpty()) {
-            element = super.remove(base);
+
+            element = super.remove(0);
         }
 
         top--;
@@ -39,7 +41,7 @@ public class Queue<T> extends LinkedList<T> {
 
     public void clear() {
         super.clear();
-        top = 0;
+        top = -1;
     }
 
     //#endregion

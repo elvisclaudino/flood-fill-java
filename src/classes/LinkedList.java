@@ -10,9 +10,9 @@ import java.util.function.Function;
 public abstract class LinkedList<T> implements Iterable<T>, ILinkedList<T> {
 
     protected int length = 0;
-    protected Node<T> top = null;
-    protected Node<T> base = null;
-    protected Exception indexOutBoundsException = new Exception("Index out of bounds");
+    private Node<T> top = null;
+    private Node<T> base = null;
+    private Exception indexOutBoundsException = new Exception("Index out of bounds");
     
     protected boolean isEmpty() {
         return length == 0;
@@ -87,6 +87,53 @@ public abstract class LinkedList<T> implements Iterable<T>, ILinkedList<T> {
         return element;
     }
 
+    private Node<T> middleNode(Node<T> start, Node<T> last)
+    {
+        if (start == null)
+            return null;
+ 
+        Node<T> slow = start;
+        Node<T> fast = start.next;
+ 
+        while (fast != last)
+        {
+            fast = fast.next;
+            if (fast != last)
+            {
+                slow = slow.next;
+                fast = fast.next;
+            }
+        }
+        return slow;
+    }
+    public Node<T> binarySearch(T value)
+    {
+        Node<T> start = base;
+        Node<T> last = null;
+ 
+        do
+        {
+           
+            Node<T> mid = middleNode(start, last);
+ 
+           
+            if (mid == null)
+                return null;
+ 
+            if (mid.data == value)
+                return mid;
+ 
+            else if (mid.data != value)
+            {
+                start = mid.next;
+            }
+            else
+                last = mid;
+        } while (last == null || last != start);
+ 
+        return null;
+    }
+
     public void clear() {
         this.base = null;
         this.top = null;
@@ -118,7 +165,14 @@ public abstract class LinkedList<T> implements Iterable<T>, ILinkedList<T> {
     }
 
     public T remove() throws Exception {
+        
         return remove(length - 1);
+    }
+
+    public void addIfNotPresent(T element) {
+        if (find(x -> x.equals(element)) == null) {
+            add(element);
+        }
     }
 
 
