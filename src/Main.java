@@ -22,11 +22,12 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
 
-        // FloodFiller floodFiller = new FloodFiller(image);
-        // floodFiller.paint(5,0,2);
+        FloodFiller floodFiller = new FloodFiller(image);
+        floodFiller.paint(8,4,2);
 
-        FloodFiller floodFiller = new FloodFiller("src/resources/input-image.png", "src/resources/output-image.png");
-        floodFiller.paint(45,0, color.getRGB(), true);
+        // FloodFiller floodFiller = new FloodFiller("src/resources/input-image.png", "src/resources/output-image.png");
+        // floodFiller.paint(21,181, color.getRGB(), false);
+        // floodFiller.paint(5,49, color.getRGB(), true);
 
 
     }

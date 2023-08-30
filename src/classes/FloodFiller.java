@@ -33,23 +33,8 @@ public class FloodFiller {
         this.outputPath = outputPath;
     }
 
-    private void createGIF() {
-        // frames.forEach((frame, index) -> {
-        //     String gifPath = outputPath.replace(".png", index + ".png");
-        //     try {
-        //         ImageIO.write(frame, "jpg", new File(gifPath));
-        //     } catch (IOException e) {
-        //         e.printStackTrace();
-        //     }
-        // });
-    }
-
     private int[][] matrix() {
         return  currentMatrix == null ? matrixOrigin : currentMatrix;
-    }
-
-    protected void matrix(int x, int y, int value) {
-        matrix()[x][y] = value;
     }
 
     public void printImage() {
@@ -67,25 +52,21 @@ public class FloodFiller {
         this.onlyResultImage = onlyResultImage;
         if (matrix() != null) {
             if (coord.getX() < matrix().length && coord.getY() < matrix()[coord.getX()].length) {
-                printImage();
                 int toFind = matrix()[coord.getX()][coord.getY()];
                 stack.add(coord);
                 fill(toFind, value);
-                printImage();
+        
             } else throw new Exception("Coordenada inválida!");
         } else {
             if (coord.getY() < inputImage.getHeight() && coord.getX() < inputImage.getWidth()) {
                 int toFind = inputImage.getRGB(coord.getX(),coord.getY());
                 stack.add(coord);
-                
-
                 fill(toFind, value);
-                
-            } else throw new Exception("Coordenada inválida!");
 
-            if (inputImage != null && onlyResultImage) {
-                createFile(outputImage);                
-            }
+                if (inputImage != null && onlyResultImage) {
+                    createFile(outputImage);
+                }
+            } else throw new Exception("Coordenada inválida!");
         }
     }
 
@@ -102,32 +83,32 @@ public class FloodFiller {
 
     private int counter = 0;
     private void fill(int find, int replace) throws Exception {
-        if (stack.isEmpty()) {
-            return;
-        }
+        while (!stack.isEmpty()) {
+            counter++;
+            
+            Coordinate coordinate = stack.remove();
 
-        Coordinate coordinate = stack.remove();
-
-        if (matrix() != null) {
-            matrix()[coordinate.getX()][coordinate.getY()] = replace;
-        } else if (outputImage != null) {
-            outputImage.setRGB(coordinate.getX(), coordinate.getY(), replace);
-            if (++counter % 10 == 0 && !this.onlyResultImage) {
-                createFile(outputImage);
+            if (matrix() != null) {
+                if (matrix()[coordinate.getX()][coordinate.getY()] == find) {
+                    matrix()[coordinate.getX()][coordinate.getY()] = replace;
+                    printImage();
+                }
+                
+                matrix()[coordinate.getX()][coordinate.getY()] = replace;
+            } else if (outputImage != null) {
+                outputImage.setRGB(coordinate.getX(), coordinate.getY(), replace);
+                if (!this.onlyResultImage && counter % 10 == 0) {
+                    createFile(outputImage);
+                }
             }
+
+            checkY(coordinate.clone(), find);
+            checkX(coordinate.clone(), find);
         }
-
-
-        if (!checkY(coordinate.clone(), find) && !checkX(coordinate.clone(), find) && stack.isEmpty()) {
-            return;
-        }
-
-        fill(find, replace);
     }
 
     private boolean checkX(Coordinate coordinate, int find) {
         boolean found = true;
-
         coordinate = new Coordinate(coordinate.getX() + 1, coordinate.getY());
         if (checkRight(coordinate)) {
             if (matrix() != null && matrix()[coordinate.getX()][coordinate.getY()] == find) {
@@ -136,7 +117,6 @@ public class FloodFiller {
                 stack.add(coordinate);
             } else found = false;
         }
-
         coordinate = new Coordinate(coordinate.getX() - 2, coordinate.getY());
         if (checkLeft(coordinate)) {
             if (matrix() != null && matrix()[coordinate.getX()][coordinate.getY()] == find) {
@@ -145,12 +125,11 @@ public class FloodFiller {
                 stack.add(coordinate);
             } else found = false;
         }
-        
         return found;
     }
+
     private boolean checkY(Coordinate coordinate, int find) {
         boolean found = true;
-
         coordinate = new Coordinate(coordinate.getX(), coordinate.getY() - 1);
         if (checkTop(coordinate)) {
             if (matrix() != null && matrix()[coordinate.getX()][coordinate.getY()] == find) {
@@ -159,7 +138,6 @@ public class FloodFiller {
                 stack.add(coordinate);
             } else found = false;
         }
-        
         coordinate = new Coordinate(coordinate.getX(), coordinate.getY() + 2);
         if (checkBottom(coordinate)) {
             if (matrix() != null && matrix()[coordinate.getX()][coordinate.getY()] == find) {
@@ -168,8 +146,6 @@ public class FloodFiller {
                 stack.add(coordinate);
             } else found = false;
         }
-        
-        
         return found;
     }
 
@@ -180,7 +156,7 @@ public class FloodFiller {
         return coordinate.getY() < (inputImage == null ? matrix().length : inputImage.getHeight());
     }
     private boolean checkRight(Coordinate coordinate) {
-        return coordinate.getX() < (inputImage == null ? matrix()[coordinate.getX()].length : inputImage.getWidth());
+        return coordinate.getX() < (inputImage == null ? matrix()[coordinate.getY()].length : inputImage.getWidth());
     }
     private boolean checkLeft(Coordinate coordinate) {
         return coordinate.getX() >= 0;
