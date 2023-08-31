@@ -53,14 +53,14 @@ public class FloodFiller {
         if (matrix() != null) {
             if (coord.getX() < matrix().length && coord.getY() < matrix()[coord.getX()].length) {
                 int toFind = matrix()[coord.getX()][coord.getY()];
-                stack.add(coord);
+                queue.add(coord);
                 fill(toFind, value);
         
             } else throw new Exception("Coordenada inválida!");
         } else {
             if (coord.getY() < inputImage.getHeight() && coord.getX() < inputImage.getWidth()) {
                 int toFind = inputImage.getRGB(coord.getX(),coord.getY());
-                stack.add(coord);
+                queue.add(coord);
                 fill(toFind, value);
 
                 if (inputImage != null && onlyResultImage) {
@@ -83,18 +83,18 @@ public class FloodFiller {
 
     private int counter = 0;
     private void fill(int find, int replace) throws Exception {
-        while (!stack.isEmpty()) {
+        while (!queue.isEmpty()) {
             counter++;
             
-            Coordinate coordinate = stack.remove();
+            Coordinate coordinate = queue.remove();
+
+            if (matrix()[coordinate.getX()][coordinate.getY()] != find) {
+                continue;
+            }
 
             if (matrix() != null) {
-                if (matrix()[coordinate.getX()][coordinate.getY()] == find) {
-                    matrix()[coordinate.getX()][coordinate.getY()] = replace;
-                    printImage();
-                }
-                
                 matrix()[coordinate.getX()][coordinate.getY()] = replace;
+                printImage();
             } else if (outputImage != null) {
                 outputImage.setRGB(coordinate.getX(), coordinate.getY(), replace);
                 if (!this.onlyResultImage && counter % 10 == 0) {
@@ -112,17 +112,17 @@ public class FloodFiller {
         coordinate = new Coordinate(coordinate.getX() + 1, coordinate.getY());
         if (checkRight(coordinate)) {
             if (matrix() != null && matrix()[coordinate.getX()][coordinate.getY()] == find) {
-                stack.add(coordinate);
+                queue.add(coordinate);
             } else if (outputImage != null && outputImage.getRGB(coordinate.getX(), coordinate.getY()) == find) {
-                stack.add(coordinate);
+                queue.add(coordinate);
             } else found = false;
         }
         coordinate = new Coordinate(coordinate.getX() - 2, coordinate.getY());
         if (checkLeft(coordinate)) {
             if (matrix() != null && matrix()[coordinate.getX()][coordinate.getY()] == find) {
-                stack.add(coordinate);
+                queue.add(coordinate);
             } else if (outputImage != null && outputImage.getRGB(coordinate.getX(), coordinate.getY()) == find) {
-                stack.add(coordinate);
+                queue.add(coordinate);
             } else found = false;
         }
         return found;
@@ -133,17 +133,17 @@ public class FloodFiller {
         coordinate = new Coordinate(coordinate.getX(), coordinate.getY() - 1);
         if (checkTop(coordinate)) {
             if (matrix() != null && matrix()[coordinate.getX()][coordinate.getY()] == find) {
-                stack.add(coordinate);
+                queue.add(coordinate);
             } else if (outputImage != null && outputImage.getRGB(coordinate.getX(), coordinate.getY()) == find) {
-                stack.add(coordinate);
+                queue.add(coordinate);
             } else found = false;
         }
         coordinate = new Coordinate(coordinate.getX(), coordinate.getY() + 2);
         if (checkBottom(coordinate)) {
             if (matrix() != null && matrix()[coordinate.getX()][coordinate.getY()] == find) {
-                stack.add(coordinate);
+                queue.add(coordinate);
             } else if (outputImage != null && outputImage.getRGB(coordinate.getX(), coordinate.getY()) == find) {
-                stack.add(coordinate);
+                queue.add(coordinate);
             } else found = false;
         }
         return found;
