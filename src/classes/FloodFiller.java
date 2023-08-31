@@ -88,14 +88,17 @@ public class FloodFiller {
             
             Coordinate coordinate = queue.remove();
 
-            if (matrix()[coordinate.getX()][coordinate.getY()] != find) {
-                continue;
-            }
-
+            
             if (matrix() != null) {
+                if (matrix()[coordinate.getX()][coordinate.getY()] != find) {
+                    continue;
+                }
                 matrix()[coordinate.getX()][coordinate.getY()] = replace;
                 printImage();
             } else if (outputImage != null) {
+                if (outputImage.getRGB(coordinate.getX(), coordinate.getY()) != find) {
+                    continue;
+                }
                 outputImage.setRGB(coordinate.getX(), coordinate.getY(), replace);
                 if (!this.onlyResultImage && counter % 10 == 0) {
                     createFile(outputImage);
